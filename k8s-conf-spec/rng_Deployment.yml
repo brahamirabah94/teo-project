@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-deploy
+  labels:
+    env: prod
+  annotations:
+    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/automated: 'true'
+spec:
+  replicas: 1
+  selectors:
+    matchLabels:
+      env: prod
+  templete:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: rng-container
+        image: brahamirabah94/rng:1.0.1
+        ports:
+        - conatinerPort: 8002
+        volumeMount:
+        - name: volume1
+          mountPath: ~/
+      volumes:
+      - name: volume1
+        emptyDir: {}
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-service
+  labels:
+    env: prod
+  annotations:
+    prometheus.io/scrape: 'true'
+spec:
+  selectors:
+    matchLabels:
+      env: prod
+  type: NodePort
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80
