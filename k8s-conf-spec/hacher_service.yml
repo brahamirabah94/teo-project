@@ -5,7 +5,6 @@ metadata:
     app: hacher
   name: hacher-service
 spec:
-  type: ClusterIP
   ports:
   - port: 8083
     targetPort: 80
