@@ -5,7 +5,6 @@ metadata:
     app: redis
   name: redis-service
 spec:
-  type: ClusterIP
   ports:
   - port: 6379
     targetPort: 6379
