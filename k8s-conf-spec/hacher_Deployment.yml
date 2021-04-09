@@ -1,8 +1,7 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: first-deploy
+  name: hacher-deploy
   labels:
     app: hacher
   annotations:
@@ -23,4 +22,3 @@ spec:
         image: brahamirabah94/hasher:1.0.1
         ports:
         - conatinerPort: 80
-

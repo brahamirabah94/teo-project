@@ -93,7 +93,7 @@ stages:
       inputs:
         SourceFolder: '$(System.ArtifactsDirectory)/drop'
         Contents: 'tfplan'
-        TargetFolder: '$(System.DefaultWorkingDirectory)/01_ResourceGroup'
+        TargetFolder: '$(System.DefaultWorkingDirectory)/terraform'
 
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
@@ -105,7 +105,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/01_ResourceGroup'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         backendServiceArm: 'MYSERVICECONNECTION'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -117,7 +117,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/01_ResourceGroup'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         commandOptions: 'tfplan'
         environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
 
@@ -144,15 +144,15 @@ stages:
         inlineScript: |
           set -e
 
-          CLUSTER_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.cluster_name.value' -r)
-          RESOURCE_GROUP_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.resource_group_name.value' -r)
+        # CLUSTER_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.cluster_name.value' -r)
+        # RESOURCE_GROUP_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.resource_group_name.value' -r)
           export USERREPO=brahamirabah94
 
           echo "installing fluxctl"
           sudo snap install fluxctl --classic
 
           echo "acquiring credentials for cluster"
-          az aks get-credentials -n $CLUSTER_NAME -g $RESOURCE_GROUP_NAME --admin
+          az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-002 --admin
 
           echo "ensuring flux namespace exists"
           kubectl apply -f flux.yml
@@ -164,7 +164,7 @@ stages:
           helm upgrade -i flux fluxcd/flux \
             --set git.url=git@github.com:${USERREPO}/gitops-helm-workshop) \
             --set git.user=${USERREPO} \
-            --set git.path=kubernetes/ \
+            --set git.path=../k8s-conf-spec \
             --set git.branch=flux-test
             --set registry.acr.enabled=true \
             --namespace flux
@@ -180,10 +180,7 @@ stages:
           echo "acquiring public ssh key for flux"
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo "##vso[task.setvariable variable=Staging.Flux.SshPublicKey;issecret=true]$STAGING_SSH_PUBLIC_KEY"
-# aussi configure a partir du conateiner registery mise en place:
-#  annotations:
-#    fluxcd.io/tag.example-app: semver:~1.0
-#    fluxcd.io/automated: 'true'
+
           sleep 5
           echo "adding prometheus & grafana helm repo"
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts

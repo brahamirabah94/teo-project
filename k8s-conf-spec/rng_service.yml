@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: rng-Service
+spec:
+  selector:
+    app: rng
+  ports:
+  - protocol: TCP
+    port: 8082 
+    targetPort: 80
+  type: LoadBalancer
