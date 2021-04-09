@@ -23,89 +23,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-# a rajoute le working directory du repos git
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-        backendServiceArm: 'MYSERVICECONNECTION'
-        backendAzureRmResourceGroupName: 'terraform-state-fab-rg'
-        backendAzureRmStorageAccountName: 'terraformstatefab056'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'terraform.state'
-
-    - task: TerraformTaskV1@0
-      displayName: $ terraform plan
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-# a rajoute le working directory du repos git
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-        commandOptions: '-out tfplan'
-        environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
-
-    - script: |
-          cd $(System.DefaultWorkingDirectory)/01_ResourceGroup
-          terraform show -json tfplan >> tfplan.json
-          # Format tfplan.json file
-          terraform show -json tfplan | jq '.' > tfplan.json
-          # show only the changes
-          cat tfplan.json | jq '[.resource_changes[] | {type: .type, name: .change.after.name, actions: .change.actions[]}]'
-      displayName: Create tfplan.json
-    - task: PublishBuildArtifacts@1
-      displayName: Upload tfplan
-      inputs:
-# a rajoute le working sirectory du repos git
-        PathtoPublish: '$(System.DefaultWorkingDirectory)/terraform/'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-
-  - job: waitForValidation
-    displayName: Wait for external validation
-    dependsOn: terraform_init_plan
-    pool: server
-    timeoutInMinutes: 4320 # job times out in 3 days
-    steps:
-
-    - task: ManualValidation@0
-      inputs:
-        notifyUsers: 'rabah.brahami@teolia.fr'
-        instructions: 'le fichier output du terraform plan doit étre verifier'
-
-- stage: Terraform_apply
-
-  pool:
-    vmImage: ubuntu-latest
-
-  jobs:
-
-  - job: terraform_apply
-
-    steps:
-
-    - task: DownloadBuildArtifacts@0
-      displayName: Download tfplan
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: 'drop/tfplan'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: CopyFiles@2
-      displayName: Copy tfplan
-      inputs:
-        SourceFolder: '$(System.ArtifactsDirectory)/drop'
-        Contents: 'tfplan'
-        TargetFolder: '$(System.DefaultWorkingDirectory)/terraform'
-
-    - task: TerraformInstaller@0
-      displayName: Install TF 0.14.8
-      inputs:
-        terraformVersion: '0.14.8'
-
-    - task: TerraformTaskV1@0
-      displayName: $ terraform init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: $(System.DefaultWorkingDirectory)
         backendServiceArm: 'MYSERVICECONNECTION'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -113,20 +31,21 @@ stages:
         backendAzureRmKey: 'terraform.state'
 
     - task: TerraformTaskV1@0
+      displayName: $ terraform plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+        environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
+
+
+    - task: TerraformTaskV1@0
       displayName: $ terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-        commandOptions: 'tfplan'
         environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
-
-- stage: fluxCD & prometheus & grafana with helm
-
-  pool:
-    vmImage: ubuntu-latest
-
-  jobs:
 
   - job: configure cluster AKS
 
@@ -144,8 +63,6 @@ stages:
         inlineScript: |
           set -e
 
-        # CLUSTER_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.cluster_name.value' -r)
-        # RESOURCE_GROUP_NAME=$(cat $(TerraformCluster.jsonOutputVariablesPath) | jq '.resource_group_name.value' -r)
           export USERREPO=brahamirabah94
 
           echo "installing fluxctl"
@@ -162,7 +79,7 @@ stages:
 
           echo "installing flux. installing the main operator"
           helm upgrade -i flux fluxcd/flux \
-            --set git.url=git@github.com:${USERREPO}/gitops-helm-workshop) \
+            --set git.url=git@github.com:${USERREPO}/teo-project.git) \
             --set git.user=${USERREPO} \
             --set git.path=../k8s-conf-spec \
             --set git.branch=flux-test
@@ -176,7 +93,6 @@ stages:
             --set helm.versions=v3
 
           sleep 5
-# essentiels a rajoute au repos apres instalation du fluxcd
           echo "acquiring public ssh key for flux"
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo "##vso[task.setvariable variable=Staging.Flux.SshPublicKey;issecret=true]$STAGING_SSH_PUBLIC_KEY"
@@ -204,12 +120,10 @@ stages:
             --set adminPassword='mypass' \
             --values grafana.yaml \
             --set service.type=LoadBalancer
-#sur le coup reste plus qu'a teste la config et de permettre
-# instalation de ELK ou FLK en fonction de ce qui se passe avec l'instalation et la mis e en place de ce dernier.
+
           sleep 5
           helm install elasticsearch stable/elasticsearch #elasticsearch helm charts
 
           kubectl apply -f fluentd-daemonset-elasticsearch.yaml
 
           helm install kibana stable/kibana -f kibana-values.yaml
-#after deploying EFK we can teste it after deploying cluster AKS with the adress IP and port 443 of the service kibana(service with LoadBalancer type) check this with kubectlk get svc
