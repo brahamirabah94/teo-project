@@ -24,7 +24,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
 # a rajoute le working directory du repos git
-        workingDirectory: '$(System.DefaultWorkingDirectory)/01_ResourceGroup'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         backendServiceArm: 'MYSERVICECONNECTION'
         backendAzureRmResourceGroupName: 'terraform-state-fab-rg'
         backendAzureRmStorageAccountName: 'terraformstatefab056'
@@ -37,7 +37,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
 # a rajoute le working directory du repos git
-        workingDirectory: '$(System.DefaultWorkingDirectory)/01_ResourceGroup'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         commandOptions: '-out tfplan'
         environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
 
@@ -53,7 +53,7 @@ stages:
       displayName: Upload tfplan
       inputs:
 # a rajoute le working sirectory du repos git
-        PathtoPublish: '$(System.DefaultWorkingDirectory)/01_ResourceGroup/'
+        PathtoPublish: '$(System.DefaultWorkingDirectory)/terraform/'
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
