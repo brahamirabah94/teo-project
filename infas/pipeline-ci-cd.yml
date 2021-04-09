@@ -50,9 +50,11 @@ stages:
   - job: configure cluster AKS
 
     steps:
+
     - task: HelmInstaller@1
       inputs:
         helmVersionToInstall: 'latest'
+        installKubectl: true
 
     - task: AzureCLI@2
       displayName: Install Fluxctl
