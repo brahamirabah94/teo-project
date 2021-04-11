@@ -38,7 +38,6 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)
         environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
 
-
     - task: TerraformTaskV1@0
       displayName: $ terraform apply
       inputs:
@@ -54,7 +53,6 @@ stages:
     - task: HelmInstaller@1
       inputs:
         helmVersionToInstall: 'latest'
-        installKubectl: true
 
     - task: AzureCLI@2
       displayName: Install Fluxctl
