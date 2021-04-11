@@ -17,7 +17,7 @@ stages:
     - task: Docker@2
       displayName: 'Build & push hacher images'
       inputs:
-        containerRegistry: 'connexion-docker-hub'
+        containerRegistry: 'ConnectionToDockerHub'
         repository: rabah945/hacher
         Dockerfile: hasher/Dockerfile
         tags: '$(Version)'
@@ -25,7 +25,7 @@ stages:
     - task: Docker@2
       displayName: 'Build & push rng image'
       inputs:
-        containerRegistry: 'connexion-docker-hub'
+        containerRegistry: 'ConnectionToDockerHub'
         repository: rabah945/rng
         Dockerfile: rng/Dockerfile
         tags: '$(Version)'
@@ -33,7 +33,7 @@ stages:
     - task: Docker@2
       displayName: 'Build & push webui image'
       inputs:
-        containerRegistry: 'connexion-docker-hub'
+        containerRegistry: 'ConnectionToDockerHub'
         repository: rabah945/webui
         Dockerfile: webui/Dockerfile
         tags: '$(Version)'
@@ -41,7 +41,7 @@ stages:
     - task: Docker@2
       displayName: 'Build & push worker image'
       inputs:
-        containerRegistry: 'connexion-docker-hub'
+        containerRegistry: 'ConnectionToDockerHub'
         repository: rabah945/worker
         Dockerfile: worker/Dockerfile
         tags: '$(Version)'
