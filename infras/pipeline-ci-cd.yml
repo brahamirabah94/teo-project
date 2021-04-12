@@ -88,7 +88,7 @@ stages:
             --set git.url=git@github.com:${USERREPO}/teo-project.git \
             --set git.user=${USERREPO} \
             --set git.path=k8s-conf-spec/ \
-            --set git.branch=master
+            --set git.branch=master \
             --set registry.acr.enabled=true \
             --namespace flux
 
@@ -100,7 +100,7 @@ stages:
 
           sleep 5
           echo "acquiring public ssh key for flux"
-          STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
+          STAGING_SSH_PUBLIC_KEY=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
           echo "##vso[task.setvariable variable=Staging.Flux.SshPublicKey;issecret=true]$STAGING_SSH_PUBLIC_KEY"
 
           sleep 5
@@ -117,7 +117,9 @@ stages:
             --namespace monitoring \
             --set alertmanager.persistentVolume.storageClass="default" \
             --set server.persistentVolume.storageClass="default"
-
+          
+          curl -o grafana.yaml https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/grafana.yml
+          
           echo "installing grafana charts"
           helm install grafana grafana/grafana \
             --namespace monitoring \
@@ -130,8 +132,8 @@ stages:
           sleep 5
           helm repo add stable https://charts.helm.sh/stable
 
-          helm install elasticsearch stable/elasticsearch #elasticsearch helm charts
+          helm install elasticsearch stable/elasticsearch
 
-          kubectl apply -f fluentd-daemonset-elasticsearch.yaml
-
-          helm install kibana stable/kibana -f kibana-values.yaml
+          kubectl apply -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/fluentd-daemonset-elasticsearch.yaml
+          
+          helm install kibana stable/kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
