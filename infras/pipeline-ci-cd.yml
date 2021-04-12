@@ -101,36 +101,21 @@ stages:
           sleep 5
           echo "acquiring public ssh key for flux"
           STAGING_SSH_PUBLIC_KEY=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
-          echo "##vso[task.setvariable variable=Staging.Flux.SshPublicKey;issecret=true]$STAGING_SSH_PUBLIC_KEY"
+          echo $STAGING_SSH_PUBLIC_KEY
 
           sleep 5
-          echo "adding prometheus & grafana helm repo"
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo add grafana https://grafana.github.io/helm-charts
-          helm repo update
 
           echo "ensuring monitoring namespace exists"
           kubectl create namespace monitoring
 
+          echo "adding prometheus & grafana helm repo"
+          helm repo add stable https://charts.helm.sh/stable
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
           echo "installing prometheus charts"
-          helm install prometheus prometheus-community/prometheus \
-            --namespace monitoring \
-            --set alertmanager.persistentVolume.storageClass="default" \
-            --set server.persistentVolume.storageClass="default"
-          
-          curl -o grafana.yaml https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/grafana.yml
-          
-          echo "installing grafana charts"
-          helm install grafana grafana/grafana \
-            --namespace monitoring \
-            --set persistence.storageClassName="default" \
-            --set persistence.enabled=true \
-            --set adminPassword='mypass' \
-            --values grafana.yaml \
-            --set service.type=LoadBalancer
+          helm install stable prometheus-community/kube-prometheus-stack --namespace monitoring
 
           sleep 5
-          helm repo add stable https://charts.helm.sh/stable
 
           helm install elasticsearch stable/elasticsearch
 
