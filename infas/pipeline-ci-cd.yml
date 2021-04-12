@@ -46,6 +46,12 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
+- stage: configure_cluster_AKS
+
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
   - job: configure_cluster_AKS
 
     steps:
