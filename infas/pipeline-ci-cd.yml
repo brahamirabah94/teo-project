@@ -23,7 +23,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '../terraform'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         backendServiceArm: 'MyConnectionAzure'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -35,7 +35,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '../terraform'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
@@ -43,7 +43,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '../terraform'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
   - job: configure_cluster_AKS
