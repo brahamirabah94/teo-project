@@ -1,4 +1,4 @@
-resource_group_name = "rg-teoschool-rabah-002"
+resource_group_name = "rg-teoschool-rabah-001"
 location            = "West Europe"
 cluster_name        = "teoSch-aks-cluster"
 kubernetes_version  = "1.18"
