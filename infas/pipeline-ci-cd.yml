@@ -19,7 +19,7 @@ stages:
         terraformVersion: '0.14.8'
 
     - task: TerraformTaskV1@0
-      displayName: $ terraform init
+      displayName: terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -31,7 +31,7 @@ stages:
         backendAzureRmKey: 'terraform.state'
 
     - task: TerraformTaskV1@0
-      displayName: $ terraform plan
+      displayName: terraform plan
       inputs:
         provider: 'azurerm'
         command: 'plan'
@@ -39,7 +39,7 @@ stages:
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
-      displayName: $ terraform apply
+      displayName: terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
