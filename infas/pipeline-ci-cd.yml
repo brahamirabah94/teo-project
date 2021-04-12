@@ -44,7 +44,7 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         workingDirectory: '../terraform'
-        environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
+        environmentServiceNameAzureRM: 'MyConnectionAzure'
 
   - job: configure_cluster_AKS
 
