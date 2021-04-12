@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
-
+}
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.cluster_name
   kubernetes_version  = var.kubernetes_version
