@@ -23,8 +23,8 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-        backendServiceArm: 'MYSERVICECONNECTION'
+        workingDirectory: '../terraform'
+        backendServiceArm: 'MyConnectionAzure'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
         backendAzureRmContainerName: 'container-tfstate'
@@ -35,15 +35,15 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-        environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
+        workingDirectory: '../terraform'
+        environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
       displayName: $ terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: '../terraform'
         environmentServiceNameAzureRM: 'MYSERVICECONNECTION'
 
   - job: configure cluster AKS
@@ -57,7 +57,7 @@ stages:
     - task: AzureCLI@2
       displayName: Install Fluxctl
       inputs:
-        azureSubscription: 'MYSERVICECONNECTION'
+        azureSubscription: 'MyConnectionAzure'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
@@ -81,7 +81,7 @@ stages:
           helm upgrade -i flux fluxcd/flux \
             --set git.url=git@github.com:${USERREPO}/teo-project.git) \
             --set git.user=${USERREPO} \
-            --set git.path=../k8s-conf-spec \
+            --set git.path=k8s-conf-spec/ \
             --set git.branch=flux-test
             --set registry.acr.enabled=true \
             --namespace flux
@@ -122,6 +122,8 @@ stages:
             --set service.type=LoadBalancer
 
           sleep 5
+          helm repo add stable https://charts.helm.sh/stable
+
           helm install elasticsearch stable/elasticsearch #elasticsearch helm charts
 
           kubectl apply -f fluentd-daemonset-elasticsearch.yaml
