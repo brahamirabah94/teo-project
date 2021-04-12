@@ -1,6 +1,6 @@
 resource_group_name = "rg-teoschool-rabah-002"
 location            = "West Europe"
-cluster_name        = "teoSch-aks-cluster"
+cluster_name        = "teoSch_aks_cluster"
 kubernetes_version  = "1.18"
 system_node_count   = 1
 #acr_name            = "teoSch-acr-regitry"
