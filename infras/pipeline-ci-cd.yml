@@ -85,10 +85,10 @@ stages:
 
           echo "installing flux. installing the main operator"
           helm upgrade -i flux fluxcd/flux \
-            --set git.url=git@github.com:${USERREPO}/teo-project.git) \
+            --set git.url=git@github.com:${USERREPO}/teo-project.git \
             --set git.user=${USERREPO} \
             --set git.path=k8s-conf-spec/ \
-            --set git.branch=flux-test
+            --set git.branch=master
             --set registry.acr.enabled=true \
             --namespace flux
 
