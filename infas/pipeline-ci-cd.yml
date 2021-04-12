@@ -78,7 +78,7 @@ stages:
           sudo snap install fluxctl --classic
 
           echo "ensuring flux namespace exists"
-          kubectl apply -f flux.yml
+          kubectl create namespace flux
 
           echo "installing flux. adding fluxcd helm repo"
           helm repo add fluxcd https://charts.fluxcd.io
@@ -110,7 +110,7 @@ stages:
           helm repo update
 
           echo "ensuring monitoring namespace exists"
-          kubectl apply -f monitoring.yml
+          kubectl create namespace monitoring
 
           echo "installing prometheus charts"
           helm install prometheus prometheus-community/prometheus \
