@@ -6,4 +6,3 @@ terraform {
     key                   = "${var.backend-name}"
   }
 }
-# create the var in the variable file
