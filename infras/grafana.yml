@@ -7,4 +7,3 @@ datasources:
       url: http://prometheus-server.monitoring.svc.cluster.local
       access: proxy
       isDefault: true
-# define endpoint for the grafana installation
