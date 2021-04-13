@@ -120,7 +120,7 @@ stages:
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo $STAGING_SSH_PUBLIC_KEY
 
-          sleep 300
+          sleep 360
 
           echo "acquiring credentials for cluster"
           az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
