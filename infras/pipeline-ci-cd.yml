@@ -99,11 +99,6 @@ stages:
             --set helm.versions=v3
 
           sleep 5
-          echo "acquiring public ssh key for flux"
-          STAGING_SSH_PUBLIC_KEY=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
-          echo $STAGING_SSH_PUBLIC_KEY
-
-          sleep 5
 
           echo "ensuring monitoring namespace exists"
           kubectl create namespace monitoring
@@ -121,4 +116,11 @@ stages:
 
           kubectl apply -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/fluentd-daemonset-elasticsearch.yaml
           
-          helm install kibana stable/kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
+          helm install kibana 
+          
+          
+          /kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
+         
+          echo "acquiring public ssh key for flux"
+          STAGING_SSH_PUBLIC_KEY=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
+          echo $STAGING_SSH_PUBLIC_KEY
