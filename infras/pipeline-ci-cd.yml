@@ -86,7 +86,7 @@ stages:
             --set git.url=git@github.com:${USERREPO}/teo-project.git \
             --set git.user=${USERREPO} \
             --set git.path=k8s-conf-spec/ \
-            --set git.branch=master \
+            --set git.branch=main \
             --set registry.acr.enabled=true \
             --namespace flux
 
