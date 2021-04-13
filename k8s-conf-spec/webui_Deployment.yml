@@ -2,24 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: webui
+    app: webui-app
   name: webui-Deployment
   annotations:
-    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/tag.webui-app: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: webui
+      app: webui-app
   template:
     metadata:
       labels:
-        app: webui
+        app: webui-app
     spec:
       containers:
       - image: brahamirabah94/webui:1.0.1
-        name: webui-containers
+        name: webui-app
         ports:
         - containerPort: 80
           name: webui-port
