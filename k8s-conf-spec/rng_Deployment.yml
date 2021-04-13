@@ -3,23 +3,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: rng
+    app: rng-app
   name: rng-deploy
   annotations:
-    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/tag.rng-app: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
   selectors:
     matchLabels:
-      app: rng
+      app: rng-app
   templete:
     metadata:
       labels:
-        app: rng
+        app: rng-app
     spec:
       containers:
-      - name: rng-container
+      - name: rng-app
         image: brahamirabah94/rng:1.0.1
         ports:
         - conatinerPort: 80
