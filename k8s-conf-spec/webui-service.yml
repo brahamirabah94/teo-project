@@ -4,7 +4,7 @@ metadata:
   name: webui-Service
 spec: 
   selector: 
-    app: webui
+    app: webui-app
   ports: 
   - protocol: TCP 
     port: 8080 
