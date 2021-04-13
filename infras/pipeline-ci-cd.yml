@@ -120,6 +120,7 @@ stages:
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo $STAGING_SSH_PUBLIC_KEY
     - task: ManualValidation@0
+      timeoutInMinutes: 1440
       inputs:
         notifyUsers: 'rabah.brahami@teolia.fr'
         instructions: 'you should add the ssh key to the Github repository'
