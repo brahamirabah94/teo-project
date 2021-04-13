@@ -1,0 +1,1 @@
+{"jobID":"f83fe1cd-f1c4-d81c-327b-6fe4106145d1","spec":{"type":"policy","cause":{"Message":"","User":""},"spec":{"default:deployment/hasher-deploy":{"add":{"tag.hasher-app":"glob:1.0.*"},"remove":{}}}},"result":null}
