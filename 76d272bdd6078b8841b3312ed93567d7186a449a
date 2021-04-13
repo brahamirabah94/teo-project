@@ -1,0 +1,1 @@
+{"jobID":"47f79e73-6cba-f2a7-e52d-50f40ae2bf1c","spec":{"type":"policy","cause":{"Message":"","User":""},"spec":{"default:deployment/webui-Deployment":{"add":{"tag.webui-app":"glob:1.0.*"},"remove":{}}}},"result":null}
