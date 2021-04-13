@@ -119,23 +119,10 @@ stages:
           echo "acquiring public ssh key for flux"
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo $STAGING_SSH_PUBLIC_KEY
-
-  - job: waitForValidation
-    displayName: Wait for external validation 
-    dependsOn: configure_cluster_AKS
-    pool: server    
-    timeoutInMinutes: 1440 # job times out in 3 days
-    steps:   
-
     - task: ManualValidation@0
       inputs:
         notifyUsers: 'rabah.brahami@teolia.fr'
         instructions: 'you should add the ssh key to the Github repository'
-          
-
-  - job: configure_fluxctl_policy
-    dependsOn: waitForValidation
-    steps:
     - task: AzureCLI@2
       displayName: Configure the fluxctl policy
       inputs:
