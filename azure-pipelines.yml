@@ -6,7 +6,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 variables:
-  Version: '1.0.1'
+  Version: '1.0.$(Build.Buildid)'
 stages:
 - stage: Build
   displayName: Build image
