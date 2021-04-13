@@ -119,5 +119,11 @@ stages:
           helm install kibana stable/kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
          
           echo "acquiring public ssh key for flux"
-          STAGING_SSH_PUBLIC_KEY=$(kubectl -n flux logs deployment/flux | grep identity.pub | cut -d '"' -f2)
+          STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo $STAGING_SSH_PUBLIC_KEY
+          
+          echo "configure policy to sync fluxcd with dockerhub"
+          fluxctl policy -w default:deployment/hasher-deploy --tag "hasher-app=1.0.*"
+          fluxctl policy -w default:deployment/rng-deploy --tag "rng-app=1.0.*"
+          fluxctl policy -w default:deployment/webui-Deployment --tag "webui-app=1.0.*"
+          fluxctl policy -w default:deployment/worker-Deployment --tag "worker-app=1.0.*"
