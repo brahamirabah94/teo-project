@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hacher-deploy
+  name: hasher-deploy
   labels:
-    app: hacher
+    app: hasher-app
   annotations:
-    fluxcd.io/tag.example-app: semver:~1.0
+    fluxcd.io/tag.hasher-app: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
   selectors:
     matchLabels:
-      app: hacher
+      app: hasher-app
   templete:
     metadata:
       labels:
-        app: hacher
+        app: hasher-app
     spec:
       containers:
-      - name: hasher-container
+      - name: hasher-app
         image: brahamirabah94/hasher:1.0.1
         ports:
         - conatinerPort: 80
