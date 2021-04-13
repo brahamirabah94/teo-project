@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hasher-deploy
+  name: hasher-deploy1
   labels:
     app: hasher-app
   annotations:
