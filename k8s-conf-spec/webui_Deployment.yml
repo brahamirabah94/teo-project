@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +6,7 @@ metadata:
     app: webui-app
   name: webui-Deployment
   annotations:
-    fluxcd.io/tag.webui-app: semver:~1.0
+    fluxcd.io/tag.webui-app: glob:1.0.*
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
