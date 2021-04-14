@@ -4,6 +4,7 @@ metadata:
   labels:
     app: redis
   name: redis-service
+  namespace: dockercoin
 spec:
   clusterIP: None
   ports:
