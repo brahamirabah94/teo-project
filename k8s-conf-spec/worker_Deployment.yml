@@ -5,7 +5,7 @@ metadata:
     app: worker-app
   name: worker-deploy
   annotations:
-    fluxcd.io/tag.worker-app: glob:1.0.*
+    fluxcd.io/tag.worker-app: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
