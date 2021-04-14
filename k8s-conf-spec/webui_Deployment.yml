@@ -5,6 +5,7 @@ metadata:
   labels:
     app: webui-app
   name: webui-deploy
+  namespace: dockercoin
   annotations:
     fluxcd.io/tag.webui-app: semver:~1.0
     fluxcd.io/automated: 'true'
