@@ -87,6 +87,7 @@ stages:
             --set git.user=${USERREPO} \
             --set git.path=k8s-conf-spec/ \
             --set git.branch=main \
+            --set sync.interval=3 \
             --set registry.acr.enabled=true \
             --namespace flux
 
