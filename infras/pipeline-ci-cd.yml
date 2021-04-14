@@ -120,13 +120,3 @@ stages:
           STAGING_SSH_PUBLIC_KEY=$(fluxctl identity --k8s-fwd-ns flux)
           echo $STAGING_SSH_PUBLIC_KEY
 
-          sleep 360
-
-          echo "acquiring credentials for cluster"
-          az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
-          
-          echo "configure policy to sync fluxcd with dockerhub"
-          fluxctl policy -w default:deployment/hasher-deploy --tag "hasher-app=1.0.*" --k8s-fwd-ns flux
-          fluxctl policy -w default:deployment/rng-deploy --tag "rng-app=1.0.*" --k8s-fwd-ns flux
-          fluxctl policy -w default:deployment/webui-Deployment --tag "webui-app=1.0.*" --k8s-fwd-ns flux
-          fluxctl policy -w default:deployment/worker-Deployment --tag "worker-app=1.0.*" --k8s-fwd-ns flux
