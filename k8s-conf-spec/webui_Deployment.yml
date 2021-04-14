@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: webui-app
-  name: webui-deployment
+  name: webui-deploy
   annotations:
     fluxcd.io/tag.webui-app: glob:1.0.*
     fluxcd.io/automated: 'true'
