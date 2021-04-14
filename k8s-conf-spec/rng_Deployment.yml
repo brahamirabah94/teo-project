@@ -9,10 +9,10 @@ metadata:
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
-  selectors:
+  selector:
     matchLabels:
       app: rng-app
-  templete:
+  template:
     metadata:
       labels:
         app: rng-app
