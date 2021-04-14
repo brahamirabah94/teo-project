@@ -5,6 +5,7 @@ metadata:
   labels:
     app: rng-app
   name: rng-deploy
+  namespace: dockercoin
   annotations:
     fluxcd.io/tag.rng-app: semver:~1.0
     fluxcd.io/automated: 'true'
