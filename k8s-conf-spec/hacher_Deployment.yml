@@ -20,6 +20,6 @@ spec:
     spec:
       containers:
       - name: hasher-app
-        image: rabah945/hasher:1.0.169
+        image: rabah945/hasher:1.0.1
         ports:
         - containerPort: 80
