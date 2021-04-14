@@ -5,6 +5,7 @@ metadata:
   labels:
     app: worker-app
   name: worker-deploy
+  namespace: dockercoin
   annotations:
     fluxcd.io/tag.worker-app: semver:~1.0
     fluxcd.io/automated: 'true'
