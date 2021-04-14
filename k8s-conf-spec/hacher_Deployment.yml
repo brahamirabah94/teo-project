@@ -21,4 +21,4 @@ spec:
       - name: hasher-app
         image: brahamirabah94/hasher:1.0.1
         ports:
-        - conatinerPort: 80
+        - containerPort: 80

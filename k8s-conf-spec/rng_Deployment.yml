@@ -21,4 +21,4 @@ spec:
       - name: rng-app
         image: brahamirabah94/rng:1.0.1
         ports:
-        - conatinerPort: 80
+        - containerPort: 80
