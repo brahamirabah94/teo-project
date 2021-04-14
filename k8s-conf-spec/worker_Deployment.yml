@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: worker-app
-  name: worker-Deployment
+  name: worker-deploy
   annotations:
     fluxcd.io/tag.worker-app: glob:1.0.*
     fluxcd.io/automated: 'true'
