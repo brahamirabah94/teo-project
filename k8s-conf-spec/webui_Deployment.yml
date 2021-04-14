@@ -19,7 +19,7 @@ spec:
         app: webui-app
     spec:
       containers:
-      - image: rabah945/webui:1.0.169
+      - image: rabah945/webui:1.0.174
         name: webui-app
         ports:
         - containerPort: 80
