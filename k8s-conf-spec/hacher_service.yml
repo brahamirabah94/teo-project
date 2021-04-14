@@ -2,11 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: hasherApp
+    app: hasher-app
   name: hasher-service
 spec:
   ports:
   - port: 8083
     targetPort: 80
   selector:
-    app: hasherApp
+    app: hasher-app
