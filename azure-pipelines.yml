@@ -18,7 +18,7 @@ stages:
       displayName: 'Build & push hacher images'
       inputs:
         containerRegistry: 'ConnectionToDockerHub'
-        repository: rabah945/hacher
+        repository: rabah945/hasher
         Dockerfile: hasher/Dockerfile
         tags: '$(Version)'
 
