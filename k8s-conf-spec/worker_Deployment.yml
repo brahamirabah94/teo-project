@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,5 +19,5 @@ spec:
         app: worker-app
     spec:
       containers:
-      - image: rabah945/worker:1.0.1
+      - image: rabah945/worker:1.0.169
         name: worker-app
