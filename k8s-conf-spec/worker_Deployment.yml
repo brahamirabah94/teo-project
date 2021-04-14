@@ -18,5 +18,5 @@ spec:
         app: worker-app
     spec:
       containers:
-      - image: brahamirabah94/worker:1.0.1
+      - image: rabah945/worker:1.0.1
         name: worker-app
