@@ -5,6 +5,7 @@ metadata:
     app: hasher-app
   name: hasher-service
 spec:
+  clusterIP: None
   ports:
   - port: 8083
     targetPort: 80
