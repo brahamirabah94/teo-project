@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hasher-deploy1
   labels:
-    app: hasherApp
+    app: hasher-app
   annotations:
     fluxcd.io/tag.hasher-app: glob:1.0.*
     fluxcd.io/automated: 'true'
@@ -11,11 +11,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hasherApp
+      app: hasher-app
   template:
     metadata:
       labels:
-        app: hasherApp
+        app: hasher-app
     spec:
       containers:
       - name: hasher-app
