@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: worker-app
+  name: worker-service
+  namespace: dockercoin
+spec:
+  clusterIP: None
+  ports:
+  - port: 8084
+    targetPort: 80
+  selector:
+    app: worker-app
