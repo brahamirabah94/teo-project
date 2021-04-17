@@ -4,6 +4,7 @@ metadata:
   name: rng-service
   namespace: dockercoin
 spec:
+  type: ClusterIP
   selector:
     app: rng-app
   ports:
