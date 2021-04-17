@@ -85,7 +85,7 @@ stages:
           helm upgrade -i flux fluxcd/flux \
             --set git.url=git@github.com:${USERREPO}/teo-project.git \
             --set git.user=${USERREPO} \
-            --set git.path=k8s-conf-spec/ \
+            --set git.path=kube-deployment.yml \
             --set git.branch=main \
             --set git.pollInterval=2m \
             --set registry.acr.enabled=true \
