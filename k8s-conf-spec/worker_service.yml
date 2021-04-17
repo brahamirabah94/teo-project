@@ -6,7 +6,6 @@ metadata:
   name: worker-service
   namespace: dockercoin
 spec:
-  clusterIP: None
   ports:
   - port: 8084
     targetPort: 80
