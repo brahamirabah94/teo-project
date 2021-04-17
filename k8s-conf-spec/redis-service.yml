@@ -6,7 +6,6 @@ metadata:
   name: redis-service
   namespace: dockercoin
 spec:
-  clusterIP: None
   ports:
   - port: 6379
     targetPort: 6379
