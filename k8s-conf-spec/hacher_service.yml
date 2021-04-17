@@ -6,7 +6,6 @@ metadata:
   name: hasher-service
   namespace: dockercoin
 spec:
-  clusterIP: None
   ports:
   - port: 8083
     targetPort: 80
