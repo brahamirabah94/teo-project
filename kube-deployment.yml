@@ -39,7 +39,7 @@ metadata:
   name: hasher-service
   namespace: dockercoin
 spec:
-  clusterIP: None
+  type: ClusterIP
   ports:
   - port: 8083
     targetPort: 80
@@ -55,7 +55,7 @@ metadata:
   name: redis-service
   namespace: dockercoin
 spec:
-  clusterIP: None
+  type: ClusterIP
   ports:
   - port: 6379
     targetPort: 6379
@@ -124,7 +124,7 @@ metadata:
   name: rng-service
   namespace: dockercoin
 spec:
-  clusterIP: None
+  type: ClusterIP
   selector:
     app: rng-app
   ports:
@@ -207,4 +207,4 @@ metadata:
 spec:
   selector:
     app: worker-app
-  clusterIP: None
+  type: ClusterIP
