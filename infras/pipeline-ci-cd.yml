@@ -87,7 +87,7 @@ stages:
             --set git.user=${USERREPO} \
             --set git.path=kube-deployment.yml \
             --set git.branch=main \
-            --set git.pollInterval=2m \
+            --set git.pollInterval=30s \
             --set registry.acr.enabled=true \
             --namespace flux
 
