@@ -205,6 +205,9 @@ metadata:
   name: worker-service
   namespace: dockercoin
 spec:
+  ports:
+  - port: 8084
+    targetPort: 80
   selector:
     app: worker-app
   type: ClusterIP
