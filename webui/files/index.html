@@ -1,111 +1,178 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-<title>DockerCoin Miner WebUI</title>
-<link rel="stylesheet" type="text/css" href="rickshaw.min.css">
-<style>
-#graph {
-    background-color: #eee;
-    width: 800px;
-    height: 400px;
-}
-#tweet {
-    color: royalblue;
-}
-</style>
-<script src="jquery.js"></script>
-<script src="d3.min.js"></script>
-<script src="rickshaw.min.js"></script>
-<script>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Projet Teoschool Brahami Rabah</title>
+        <meta name="description" content="descriptif du projet Teaschool.">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        
+        <h1>Projet Teoschool</h1>
 
-String.prototype.format = function () {
-    var args = arguments;
-    return this.replace(/\{(\d+)\}/g, function (m, n) { return args[n]; });
-};
+        <p>
+           Dans le cadre de mon intégration chez Teolia je me suis vu intégrer la Teoschool durant le premier mois suite à son un projet ma étai attribuer qui était de mettre en place une chaîne CI/CD complète permettant de déployer une app web sur un cluster AKS, ce dernier doit être mis en place avec un processus automatisé, ce qui a donné naissance à un projet complet et touchant a tous les maillants de la chaine CI/CD et de l'Infras as code.
+        </p>
+        
 
-var series = [];
-var points = []
-var graph = null;
+        
+        <h3> I- Mise en place de la feuille de route :</h3>
+        <p>
+            Durant ce projet un suivi des taches quotidiennes a etait mis en place et cela via un outil de ticketing et suivie de projet, cela a été fait avec la mise en place d'une feuille de route sur Jira comme suit: 
+        </p>
+        
+        <a href="screenshots/quick-edit.png">
+            <img alt="Capture d’écran de la feuille de route sur Jira" src="image/projet_teoschool_jira.png" />
+        </a>
+        
+        <h3> II- Conteneurisation de l'app web :</h3>
+        <p>
+            L’application conteneurisée est Dockercoin, c'est une application de démonstration utilisée à l'origine dans l'atelier d'orchestration de Jérôme Petazzoni. Atelier pratique Kubernetes, cette dernière est constituée de 4 services, que j'ai conteneurisé comme suit:
+        </p>
+        <ul>
+            <li><a href="https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/rng/Dockerfile">rng = service web générant des octets aléatoires.</a></li><br>
+            
+            <li><a href="https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/hasher/Dockerfile">hasher = hachage informatique du service web du travailleur de données.</a></li><br>
+            
+            <li><a href="https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/worker/Dockerfile">worker = processus d'arrière-plan utilisant rng et hasher.</a></li><br>
+            
+            <li><a href="https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/webui/Dockerfile">webui = interface web pour suivre la progression.</a></li><br>
 
-function refresh () {
-    $.ajax({ url: "json" }).done(function (data) {
-        series.push(data);
-        while (series.length < 250) {
-            data = JSON.parse(JSON.stringify(data));
-            data.now -= 1;
-            series.unshift(data);
-        }
-        while (series.length > 250) {
-            series.shift();
-        }
-        while (points.length > 0) {
-            points.pop();
-        }
-        var speed;
-        for (var i=0; i<series.length-1; i++) {
-            // Compute instantaneous speed
-            var s1 = series[i];
-            var s2 = series[i+1];
-            speed = (s2.hashes-s1.hashes)/(s2.now-s1.now);
-            points.push({ x: s2.now, y: speed });
-        }
-        $("#speed").text("~" + speed.toFixed(1) + " hashes/second");
-        var msg = ("I'm attending a @docker orchestration workshop, "
-                   + "and my #DockerCoins mining rig is crunching "
-                   + speed.toFixed(1) + " hashes/second! W00T!");
-        $("#tweet").attr(
-            "href",
-            "https://twitter.com/intent/tweet?text="+encodeURIComponent(msg)
-        );
-        if (graph == null) {
-            graph = new Rickshaw.Graph({
-                renderer: "area",
-                stroke: true,
-                width: 800,
-                height: 400,
-                element: $("#graph")[0],
-                preserve: true,
-                series: [
-                    { name: "Coins",
-                      color: "steelblue",
-                      data: points
-                    }
-                ]
-            });
-            graph.render();
-            var yAxis = new Rickshaw.Graph.Axis.Y({
-                graph: graph,
-                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-                ticksTreatment: "glow"
-            });
-            yAxis.render();
-        } else {
-            graph.update();
-            $("text").css({
-                "font-size": "15px",
-                "font-weight": "normal",
-                "opacity": 0.5,
-            });
-        }
-    });
-}
+        </ul>
+  
+        <h4> Teste du déploiement des services avec docker-compose :</h4>
+        <p>
+            À fin de tester le déploiement de cette application on met en place une docker compose à fin de tester le déploiement de cette appli à travers le déploiement des 4 services.
+        </p>
+        <ul>
+            <li><a href="https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/docker-compose.yml">Docker Compose</a></li><br>
+        
+        </ul>
 
-$(function () {
-    setInterval(refresh, 1000);
-});
-</script>
-</head>
-<body>
+        <a href="image/image-20210415-075303.png">
+            <img alt="iamge de l'infras as code" src="image/image-20210415-075303.png" />
+        </a>
+        
+        <h3>III- Mise en place du pipeline pour la construction de l'infras :</h3>
+        <p>
+            La mise en place d'une infas structurée et maintenable est la clé pour construire un déploiement solide, pour cela je consacre une grande importance à cette partie.             
+            Dans le cadre du projet Teoschool, j’ai décidé de mettre en place l’infra sur là quel le déploiement du projet sera construit, pour cela le choix s’est porté sur un déploiement qui se fera sur un cluster Kubernetes Azure (AKS).
+        </p>
 
-<h1>DockerCoin Miner WebUI</h1>
+        <h4>III.1- Terraform & Azure pipeline :</h4>
+        <p>
+        Le déploiement est fait sur un cluster AKS, le déploiement d'une infras automatisé est nécessaire. pour parvenir a cela il aurait fallut mettre en place une infra maintenable, évolutive et automatisé 2 outils ont etaient choisis  <B>terraform et Azure devops</B>.
+        </p>
 
-<div id="graph"></div>
+        
+        <a href="image/infra%20as%20code.PNG">
+            <img alt="iamge de l'infras as code" src="image/infra%20as%20code.PNG" />
+        </a>
+        
+        <p>
+           comme apparu sur les schémas ci-dessus le déploiement de cette infra ce fait d'une façon automatisée via un pipeline azure Devops, ce dernier est composé d'une partie deploiement du cluster AKS qui est faite avec du terraform suivie d'une deuxième qui permet l'installation d'un outil continuous deployment(fluxcd), monitoring (prometheus & grafana) et en fin de logging (stack EFK).
+        </p>
+        <p>
+            Une fois le pipeline déployé on aura à la fin une clé SSH qui fera office de clé de déploiement fluxcd, permettant de lier le compte github à flux et ainsi permettre un déploiement automatisé de notre app web.
+        </p>
+        
+        <h3>III.2- Choix de l'infras mise en place:</h3>
+        
+        <h4>III.2.a- Pourquoi FluxCD ?! :</h4>
+        <p>
+        A fin de permettre un deploiement continue et automatisé du cluster kubernetes sur AKS j'ai choisi de faire du gitops avec fluxcd, les raisons principales de mon choix sont:
+        </p>
+        <ul>
+            <li>Outil de continuous deployement (CD).</li>
+            
+            <li>De la famille des gitops kubernetes * nokubectl.</li>
+            
+            <li>Mise à jour automatique des ressources(que se soit du cote de git et de la registry d'image).</li>
+            
+            <li>Peut être couplé à Helm (c'est le cas pour nous dans cette example).</li>
+                        
+            <li>Check à fréquence régulière (par defaut 5min).</li>       
 
-<h2>
-  Current mining speed:
-  <span id="speed">-</span>
-  <a id="tweet" href="#">(Tweet this!)</a>
-</h2>
+        </ul>
+        <a href="image/fluxcd.PNG">
+            <img alt="iamge de l'infras as code" src="image/fluxcd.PNG">
+        </a>
+        
 
-</body>
+        <h4>III.2.b- Stack Prometheus :</h4>
+        <p>La stack <B>kube-prometheus-stack</B> est une collection de manifest kubernetes compose de:
+        </p>
+        <ul>
+            <li>Prometheus operator.</li>
+            
+            <li>Prometheus.</li>
+            
+            <li>Alertmanager.</li>
+            
+            <li>Prometheus node-exporter.</li>
+                        
+            <li>Prometheus Adapter.</li>       
+            
+            <li>kube-state-metrics.</li>
+            
+            <li>Grafana.</li>
+            
+            <li>prés-configuré pour la collecte de metrics sur les differents
+                composant d'un cluster kubernetes
+            </li>
+            
+        </ul>
+
+        
+        <h4>III.2.c- Stack EFK : </h4>
+        <p>
+            Le suivie de logs et une étape primordiale afin de permettre  la détection, le debug et la maintenance d'erreurs au sein d'un cluster kubernetes, pour cela j'ai préféré installe une stack EFK qui permettrait de remontée les logs liés à mon cluster et de les afficher la figure suivante illustre le different composant de ma stack et le fonctionnement de cette dernière.
+        </p>
+
+        <a href="image/stackEFK.PNG">
+            <img alt="iamge de l'infras as code" src="image/stackEFK.PNG">
+        </a>
+        
+
+
+        <h2>Partage ;)</h2>
+        <p>
+            Ce projet est un projet open source. Ouvert à l'amélioration et peut-être utilise afin de permettre la mise en place d'un pipeline CI/CD pour different projet. Nombreux sont les projets qui peuvent se voir applique une infra pareille avec inclus un outil de logging, monitoring et de gitons, partagez vos idées ou utiliser directement au projet.
+        </p>
+        
+    <h1>Test Web APP</h1>
+    <ul><a href="coin.html">
+        <img  border="0" alt="docker-coin" src="image/Capture1.PNG" width="100" height="100"></a>
+        
+        <a href="https://github.com/brahamirabah94/teo-project-rabah">
+        <img  border="0" alt="Github" src="image/github.PNG" width="100" height="100"></a><br>
+<!--
+        
+        <a href="coin.html">
+            <button>docker-coin :)</button></a>
+        <a href="https://github.com/brahamirabah94/teo-project-rabah">
+            <button>github repository :)</button></a>
+-->
+    </ul>
+
+    <h1>Contact</h1>
+    <ul>
+        <a href="https://www.teolia.fr/">
+        <img border="0" alt="docker-coin" src="image/Outlook-ajxlaprx.png" width="100" height="100"></a>
+        
+        <a href="https://www.linkedin.com/in/rabah-brahami-780898128/">
+        <img border="0" alt="Github" src="image/lin.jpg" width="100" height="100"></a>
+
+        
+        <a href="mailto:rabah.brahami@teolia.fr">
+        <img border="0" alt="Github" src="image/mail.jpg" width="100" height="100"></a>
+        
+        <a href="tel:+33769898650">
+        <img border="0" alt="Github" src="image/tel.png" width="100" height="100"></a>
+    </ul>
+
+    <h2>Bonne Mine :)</h2>
+    </body>
 </html>
