@@ -13,7 +13,7 @@ metadata:
   labels:
     app: hasher-app
   annotations:
-    fluxcd.io/tag.hasher-app: semver:~1.0
+    fluxcd.io/tag.hasher: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
@@ -26,7 +26,7 @@ spec:
         app: hasher-app
     spec:
       containers:
-      - name: hasher-app
+      - name: hasher
         image: rabah945/hasher:1.0.174
         ports:
         - containerPort: 80
@@ -36,7 +36,7 @@ kind: Service
 metadata:
   labels:
     app: hasher-app
-  name: hasher-service
+  name: hasher
   namespace: dockercoin
 spec:
   type: ClusterIP
@@ -52,7 +52,7 @@ kind: Service
 metadata:
   labels:
     app: redis
-  name: redis-service
+  name: redis
   namespace: dockercoin
 spec:
   type: ClusterIP
@@ -60,28 +60,28 @@ spec:
   - port: 6379
     targetPort: 6379
   selector:
-    app: redis
+    app: redis-app
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: redis
+    app: redis-app
   name: redis-deploy
   namespace: dockercoin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: redis-app
   template:
     metadata:
       labels:
-        app: redis
+        app: redis-app
     spec:
       containers:
       - image: redis:alpine
-        name: redis-container
+        name: redis
         ports:
         - containerPort: 6379
         volumeMounts:
@@ -100,7 +100,7 @@ metadata:
   name: rng-deploy
   namespace: dockercoin
   annotations:
-    fluxcd.io/tag.rng-app: semver:~1.0
+    fluxcd.io/tag.rng: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
@@ -113,7 +113,7 @@ spec:
         app: rng-app
     spec:
       containers:
-      - name: rng-app
+      - name: rng
         image: rabah945/rng:1.0.174
         ports:
         - containerPort: 80
@@ -121,7 +121,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rng-service
+  name: rng
   namespace: dockercoin
 spec:
   type: ClusterIP
@@ -135,7 +135,7 @@ spec:
 apiVersion: v1 
 kind: Service
 metadata: 
-  name: webui-service
+  name: webui
   namespace: dockercoin
 spec: 
   selector: 
@@ -153,7 +153,7 @@ metadata:
   name: webui-deploy
   namespace: dockercoin
   annotations:
-    fluxcd.io/tag.webui-app: semver:~1.0
+    fluxcd.io/tag.webui: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
@@ -167,7 +167,7 @@ spec:
     spec:
       containers:
       - image: rabah945/webui:1.0.174
-        name: webui-app
+        name: webui
         ports:
         - containerPort: 80
           name: webui-port
@@ -181,7 +181,7 @@ metadata:
   name: worker-deploy
   namespace: dockercoin
   annotations:
-    fluxcd.io/tag.worker-app: semver:~1.0
+    fluxcd.io/tag.worker: semver:~1.0
     fluxcd.io/automated: 'true'
 spec:
   replicas: 1
@@ -195,14 +195,14 @@ spec:
     spec:
       containers:
       - image: rabah945/worker:1.0.174
-        name: worker-app
+        name: worker
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: worker-app
-  name: worker-service
+  name: worker
   namespace: dockercoin
 spec:
   ports:
