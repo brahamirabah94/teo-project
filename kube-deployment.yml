@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: hasher
-        image: rabah945/hasher:1.0.174
+        image: rabah945/hasher:1.0.1
         ports:
         - containerPort: 80
 ---
@@ -114,7 +114,7 @@ spec:
     spec:
       containers:
       - name: rng
-        image: rabah945/rng:1.0.174
+        image: rabah945/rng:1.0.1
         ports:
         - containerPort: 80
 ---
@@ -166,7 +166,7 @@ spec:
         app: webui-app
     spec:
       containers:
-      - image: rabah945/webui:1.0.174
+      - image: rabah945/webui:1.0.1
         name: webui
         ports:
         - containerPort: 80
@@ -194,7 +194,7 @@ spec:
         app: worker-app
     spec:
       containers:
-      - image: rabah945/worker:1.0.174
+      - image: rabah945/worker:1.0.1
         name: worker
 ---
 apiVersion: v1
