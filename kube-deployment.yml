@@ -220,8 +220,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    #traefik.ingress.kubernetes.io/redirect-entry-point: https
-    #traefik.ingress.kubernetes.io/redirect-permanent: "true"
 spec:
   rules:
   - host: teoschool.test
@@ -230,4 +228,4 @@ spec:
       - path: /
         backend:
           serviceName: webui
-          servicePort: 8080
+          servicePort: 80
