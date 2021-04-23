@@ -230,4 +230,4 @@ spec:
       - path: /
         backend:
           serviceName: webui
-          servicePort: 80
+          servicePort: 8080
