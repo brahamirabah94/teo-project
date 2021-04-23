@@ -222,7 +222,7 @@ metadata:
     traefik.ingress.kubernetes.io/frontend-entry-points: http
 spec:
   rules:
-  - host: teoschool.test
+  - host: www.devops-project-teolia.io
     http:
       paths:
       - path: /
