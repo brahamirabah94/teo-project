@@ -118,8 +118,10 @@ stages:
           helm install kibana stable/kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
           
           sleep 5
-          
-          kubectl apply -f https://raw.githubusercontent.com/brahamirabah94/teo-project-rabah/main/infras/traefik.yaml
+     
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+          helm install nginx ingress-nginx/ingress-nginx
           
           sleep 5
          
