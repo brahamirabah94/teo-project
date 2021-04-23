@@ -140,10 +140,13 @@ metadata:
 spec: 
   selector: 
     app: webui-app
-  ports: 
+#  ports: 
+#  - port: 8080 
+#    targetPort: 80 
+#  type: LoadBalancer
+  ports:
   - port: 8080 
-    targetPort: 80 
-  type: LoadBalancer
+    targetPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
