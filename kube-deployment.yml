@@ -41,7 +41,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8083
+  - port: 8081
     targetPort: 80
   selector:
     app: hasher-app
@@ -199,6 +199,8 @@ spec:
       containers:
       - image: rabah945/worker:1.0.1
         name: worker
+        - containerPort: 80
+          name: worker-port
 ---
 apiVersion: v1
 kind: Service
@@ -208,9 +210,12 @@ metadata:
   name: worker
   namespace: dockercoin
 spec: 
-  clusterIP: None
+  type: ClusterIP
   selector: 
     app: worker-app
+  ports:
+  - port: 8083
+    targetPort: 80
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
