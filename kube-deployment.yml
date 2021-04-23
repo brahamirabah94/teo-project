@@ -218,7 +218,7 @@ metadata:
   name: example-service
   namespace: dockercoin
   annotations:
-    kubernetes.io/ingress.class: "traefik"
+    kubernetes.io/ingress.class: nginx
     traefik.ingress.kubernetes.io/frontend-entry-points: http
 spec:
   rules:
