@@ -203,7 +203,28 @@ metadata:
   labels: 
     app: worker-app
   name: worker
+  namespace: dockercoin
 spec: 
   clusterIP: None
   selector: 
     app: worker-app
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-service
+  namespace: dockercoin
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    #traefik.ingress.kubernetes.io/redirect-entry-point: https
+    #traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  rules:
+  - host: teoschool.test
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: webui
+          servicePort: 80
