@@ -67,8 +67,6 @@ stages:
         inlineScript: |
           set -e
 
-          export USERREPO=brahamirabah94
-
           echo "acquiring credentials for cluster"
           az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
           
@@ -83,8 +81,8 @@ stages:
 
           echo "installing flux. installing the main operator"
           helm upgrade -i flux fluxcd/flux \
-            --set git.url=git@github.com:${USERREPO}/teo-project-rabah.git \
-            --set git.user=${USERREPO} \
+            --set git.url=git@github.com:brahamirabah94/teo-project-rabah.git \
+            --set git.user=brahamirabah94 \
             --set git.path=kube-deployment.yml \
             --set git.branch=main \
             --set git.pollInterval=30s \
