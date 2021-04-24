@@ -129,7 +129,6 @@ spec:
     app: rng-app
   ports:
   - port: 80
- 
     targetPort: 80
 #webui
 ---
@@ -197,6 +196,7 @@ spec:
       containers:
       - image: rabah945/worker:1.0.1
         name: worker
+        ports:
         - containerPort: 80
           name: worker-port
 ---
