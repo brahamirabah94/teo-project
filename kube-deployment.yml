@@ -128,7 +128,7 @@ spec:
   selector:
     app: rng-app
   ports:
-  - port: 8082 
+  - port: 80 
     targetPort: 80
 #webui
 ---
@@ -140,13 +140,10 @@ metadata:
 spec: 
   selector: 
     app: webui-app
-#  ports: 
-#  - port: 8080 
-#    targetPort: 80 
-#  type: LoadBalancer
-  ports:
-  - port: 80
+  ports: 
+  - port: 8080
     targetPort: 80
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -232,4 +229,4 @@ spec:
       - path: /
         backend:
           serviceName: webui
-          servicePort: 80
+          servicePort: 8080
