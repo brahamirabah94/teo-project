@@ -83,12 +83,11 @@ stages:
 
           echo "installing flux. installing the main operator"
           helm upgrade -i flux fluxcd/flux \
-            --set git.url=git@github.com:${USERREPO}/teo-project.git \
+            --set git.url=git@github.com:${USERREPO}/teo-project-rabah.git \
             --set git.user=${USERREPO} \
             --set git.path=kube-deployment.yml \
             --set git.branch=main \
             --set git.pollInterval=30s \
-            --set registry.acr.enabled=true \
             --namespace flux
 
           echo "installing flux. installing the helm operator"
