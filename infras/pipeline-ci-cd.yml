@@ -16,9 +16,8 @@ stages:
   - job: terraform_init_plan
 
     steps:
-    - task: PowerShell@2
+    - task: CmdLine@2
       inputs:
-        targetType: 'inline'
         script: 'docker run --volume $(tf_folder):/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/Checkov-Report.xml'
 
     - task: TerraformInstaller@0
