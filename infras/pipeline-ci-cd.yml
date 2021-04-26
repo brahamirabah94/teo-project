@@ -14,17 +14,10 @@ stages:
     steps:
 
     - script: |
-          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact
+          docker run --tty --volume   $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact
+          echo 'check the k8s code'
+          docker run --tty --volume   $(System.DefaultWorkingDirectory)/k8s-conf-spec:/tf bridgecrew/checkov --directory /tf --compact
       displayName: 'checkov analyse code'
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
-      inputs:
-        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/TEST-*.xml' 
-        searchFolder: '$(System.DefaultWorkingDirectory)/tests'
-        mergeTestResults: false 
-        testRunTitle: 'checkov test result'
-        publishRunAttachments: true 
 
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
