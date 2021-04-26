@@ -14,9 +14,7 @@ stages:
     steps:
 
     - script: |
-          pip install checkov
-          checkov -d $(System.DefaultWorkingDirectory)/k8s-conf-spec > $(System.DefaultWorkingDirectory)/tests/checkov-scan-k8s.xml
-          checkov -d $(System.DefaultWorkingDirectory)/terraform > $(System.DefaultWorkingDirectory)/tests/checkov-scan-terraform.xml
+          docker run --tty --volume $(System.DefaultWorkingDirectory)/tf:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-Report.xml
       displayName: 'checkov analyse code'
     - task: PublishTestResults@2
       inputs:
