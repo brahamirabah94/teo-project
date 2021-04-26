@@ -14,17 +14,8 @@ stages:
     steps:
 
     - script: |
-          docker run --tty --volume $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Test-Checkov.xml
+          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact
       displayName: 'checkov analyse code'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/TEST-*.xml' 
-        searchFolder: '$(System.DefaultWorkingDirectory)/terraform'
-        mergeTestResults: false 
-        testRunTitle: 'checkov test result'
-        publishRunAttachments: true 
-
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
       inputs:
