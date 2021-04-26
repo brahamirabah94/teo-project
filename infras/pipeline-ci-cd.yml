@@ -14,8 +14,9 @@ stages:
     steps:
 
     - script: |
-          pip install checkov
-          ckeckov -d  $(System.DefaultWorkingDirectory)/terraform --output junitxml  > Test-checkov.xml
+          docker run --tty --volume   $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact
+          echo 'check the k8s code'
+          docker run --tty --volume   $(System.DefaultWorkingDirectory)/k8s-conf-spec:/tf bridgecrew/checkov --directory /tf --compact
       displayName: 'checkov analyse code'
 
     - task: TerraformInstaller@0
