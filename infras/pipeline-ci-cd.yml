@@ -14,7 +14,7 @@ stages:
     steps:
 
     - script: |
-          docker run --tty --volume $(System.DefaultWorkingDirectory)/tf:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-Report.xml
+          docker run --tty --volume $(System.DefaultWorkingDirectory)/tf:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Test-Checkov.xml
       displayName: 'checkov analyse code'
     - task: PublishTestResults@2
       inputs:
@@ -32,7 +32,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         backendServiceArm: 'MyConnectionAzure'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -44,7 +44,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
@@ -52,7 +52,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
 - stage: configure_cluster_AKS
