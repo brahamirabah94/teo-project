@@ -16,9 +16,9 @@ strategy:
 steps:
 - script: |
       echo 'check the terraform code'
-      docker run --tty --volume   $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact
+      docker run --tty --volume   $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact -o junitxml > Test-check-tf.xml 
       echo 'check the k8s code'
-      docker run --tty --volume   $(System.DefaultWorkingDirectory)/k8s-conf-spec:/tf bridgecrew/checkov --directory /tf --compact
+      docker run --tty --volume   $(System.DefaultWorkingDirectory)/k8s-conf-spec:/tf bridgecrew/checkov --directory /tf --compact  > Test-check-k8s.xml 
   displayName: 'checkov analyse code'
 
 - task: UsePythonVersion@0
