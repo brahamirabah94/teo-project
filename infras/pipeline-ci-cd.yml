@@ -4,6 +4,8 @@ trigger:
 variables:
 - name: tf_folder
   value: $(System.DefaultWorkingDirectory)/terraform
+- name: k8s_folder
+  value: $(System.DefaultWorkingDirectory)/k8s-conf-spec
 
 stages:
 - stage: Terraform_init_plan
@@ -16,9 +18,13 @@ stages:
   - job: terraform_init_plan
 
     steps:
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
-        script: 'docker run --volume $(tf_folder):/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/Checkov-Report.xml'
+        targetType: 'inline'
+        script: |
+          pip3 install checkov
+          checkov -d $(k8s_folder) > $(System.DefaultWorkingDirectory)/tests/checkov-scan-k8s.xml
+          checkov -d $(tf_folder) > $(System.DefaultWorkingDirectory)/tests/checkov-scan-terraform.xml
 
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
