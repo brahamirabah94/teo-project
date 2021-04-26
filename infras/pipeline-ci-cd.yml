@@ -14,9 +14,8 @@ stages:
     steps:
 
     - script: |
-          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact --output junitxml > $(System.DefaultWorkingDirectory)/tests/Test-checkov.xml
+          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact -–format JUnit > $(System.DefaultWorkingDirectory)/tests/Test-checkov.xml
       displayName: 'checkov analyse code'
-
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
