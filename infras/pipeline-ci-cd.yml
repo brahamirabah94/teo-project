@@ -1,6 +1,10 @@
 trigger:
 - main
 
+variables:
+- name: tf_folder
+  value: $(System.DefaultWorkingDirectory)/terraform
+
 stages:
 - stage: Terraform_init_plan
 
@@ -12,6 +16,10 @@ stages:
   - job: terraform_init_plan
 
     steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'docker run --volume $(tf_folder):/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/Checkov-Report.xml'
 
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
@@ -23,7 +31,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: $(tf_folder)
         backendServiceArm: 'MyConnectionAzure'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -35,7 +43,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: $(tf_folder)
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
@@ -43,7 +51,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+        workingDirectory: $(tf_folder)
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
 - stage: configure_cluster_AKS
