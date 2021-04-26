@@ -22,6 +22,7 @@ steps:
   displayName: 'checkov analyse code'
 
 - task: UsePythonVersion@0
+  condition: succeededOrFailed()
   inputs:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
@@ -30,8 +31,12 @@ steps:
     python -m pip install --upgrade pip
     pip install -r selenium pytest redis
   displayName: 'Install dependencies'
+  condition: succeededOrFailed()
+
 
 - script: |
     pip install pytest pytest-azurepipelines
     pytest  $(System.DefaultWorkingDirectory)/rng -rA --junitxml="Test-report-u.xml"
   displayName: 'pytest'
+  condition: succeededOrFailed()
+
