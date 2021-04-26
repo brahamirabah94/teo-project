@@ -12,13 +12,18 @@ stages:
   - job: terraform_init_plan
 
     steps:
-    - task: CmdLine@2
-      inputs:
-        script: |
+
+    - script: |
           pip install checkov
           checkov -d $(System.DefaultWorkingDirectory)/k8s-conf-spec > $(System.DefaultWorkingDirectory)/tests/checkov-scan-k8s.xml
           checkov -d $(System.DefaultWorkingDirectory)/terraform > $(System.DefaultWorkingDirectory)/tests/checkov-scan-terraform.xml
-
+      displayName: 'checkov analyse code'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        testRunTitle: 'checkov test result'
+        searchFolder: '$(System.DefaultWorkingDirectory)/tests'
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
       inputs:
