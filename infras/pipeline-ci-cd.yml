@@ -1,12 +1,6 @@
 trigger:
 - main
 
-variables:
-- name: tf_folder
-  value: $(System.DefaultWorkingDirectory)/terraform
-- name: k8s_folder
-  value: $(System.DefaultWorkingDirectory)/k8s-conf-spec
-
 stages:
 - stage: Terraform_init_plan
 
@@ -23,8 +17,8 @@ stages:
         targetType: 'inline'
         script: |
           pip3 install checkov
-          checkov -d $(k8s_folder) > $(System.DefaultWorkingDirectory)/tests/checkov-scan-k8s.xml
-          checkov -d $(tf_folder) > $(System.DefaultWorkingDirectory)/tests/checkov-scan-terraform.xml
+          checkov -d $(System.DefaultWorkingDirectory)/k8s-conf-spec > $(System.DefaultWorkingDirectory)/tests/checkov-scan-k8s.xml
+          checkov -d $(System.DefaultWorkingDirectory)/terraform > $(System.DefaultWorkingDirectory)/tests/checkov-scan-terraform.xml
 
     - task: TerraformInstaller@0
       displayName: Install TF 0.14.8
@@ -36,7 +30,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: $(tf_folder)
+        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
         backendServiceArm: 'MyConnectionAzure'
         backendAzureRmResourceGroupName: 'rg-teoschool-rabah-001'
         backendAzureRmStorageAccountName: 'sateotfrabah'
@@ -48,7 +42,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: $(tf_folder)
+        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
     - task: TerraformTaskV1@0
@@ -56,7 +50,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: $(tf_folder)
+        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
 - stage: configure_cluster_AKS
@@ -96,7 +90,7 @@ stages:
           helm upgrade -i flux fluxcd/flux \
             --set git.url=git@github.com:brahamirabah94/teo-project-rabah.git \
             --set git.user=brahamirabah94 \
-            --set git.path=kube-deployment.yml \
+            --set git.path=k8s-conf-spec/k8s-kube-deployment.yml \
             --set git.branch=main \
             --set git.pollInterval=30s \
             --namespace flux
