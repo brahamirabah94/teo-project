@@ -14,14 +14,13 @@ stages:
     steps:
 
     - script: |
-          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact > $(System.DefaultWorkingDirectory)/tests/Test-checkov.xml
+          docker run --tty --volume  $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact > Test-checkov.xml
       displayName: 'checkov analyse code'
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
         testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/TEST-*.xml' 
-        searchFolder: '$(System.DefaultWorkingDirectory)/tests'
+        testResultsFiles: 'Test-checkov.xml' 
         mergeTestResults: false 
         testRunTitle: 'checkov test result'
         publishRunAttachments: true 
