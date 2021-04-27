@@ -14,13 +14,13 @@ strategy:
       python.version: '3.7'
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: |
+- script: |
       'docker run --tty --volume $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-tf-Report.xml'
       'docker run --tty --volume $(System.DefaultWorkingDirectory)/k8s-conf-spec:/k8s bridgecrew/checkov --directory /k8s --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-k8s-Report.xml'
+  displayName: Run Static Code analysis for Terraform & k8s using Checkov
 
 - task: PublishTestResults@2
+  condition: succeededOrFailed()
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'Checkov-*.xml'
