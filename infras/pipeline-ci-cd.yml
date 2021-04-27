@@ -51,10 +51,7 @@ stages:
         targetPath: '$(System.DefaultWorkingDirectory)/terraform/Test-checkov.xml'
         artifact: 'Test-checkov'
         publishLocation: 'pipeline'
-  
     - task: ManualValidation@0
-      displayName: Wait for validation 
-      timeoutInMinutes: 120
       inputs:
         notifyUsers: 'rabah.brahami@teolia.fr'
         instructions: 'you should validate the checkov scan file'
