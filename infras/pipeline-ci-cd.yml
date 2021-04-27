@@ -105,7 +105,7 @@ stages:
           helm upgrade -i flux fluxcd/flux \
             --set git.url=git@github.com:brahamirabah94/teo-project-rabah.git \
             --set git.user=brahamirabah94 \
-            --set git.path=k8s-conf-spec/k8s-kube-deployment.yml \
+            --set git.path=k8s-conf-spec/kube-deployment.yml \
             --set git.branch=main \
             --set git.pollInterval=30s \
             --namespace flux
