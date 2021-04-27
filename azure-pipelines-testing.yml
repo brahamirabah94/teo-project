@@ -14,12 +14,18 @@ strategy:
       python.version: '3.7'
 
 steps:
-- script: |
-      echo 'check the terraform code'
-      docker run --tty --volume   $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --compact -o junitxml >> Test-check-tf.xml 
-      echo 'check the k8s code'
-      docker run --tty --volume   $(System.DefaultWorkingDirectory)/k8s-conf-spec:/tf bridgecrew/checkov --directory /tf --compact -o junitxml  >> Test-check-k8s.xml 
-  displayName: 'checkov analyse code'
+- task: AzureCLI@2
+  displayName: checkov scan
+  inputs:
+    azureSubscription: 'MyConnectionAzure'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+        az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
+
+        kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
+        
+        kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-check.xml
 
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
