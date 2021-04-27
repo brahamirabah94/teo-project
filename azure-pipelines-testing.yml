@@ -36,7 +36,6 @@ steps:
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'Test-*.xml'
-    searchFolder: '$(System.DefaultWorkingDirectory)/tests'
     testRunTitle: 'test-checkov'
 
 - task: UsePythonVersion@0
