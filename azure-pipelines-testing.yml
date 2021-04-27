@@ -24,6 +24,8 @@ steps:
         az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
 
         kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
+
+        sleep 90
         
         kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-check.xml
 
