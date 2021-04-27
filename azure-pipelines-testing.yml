@@ -22,24 +22,18 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
         az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
-
         kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
 
-        git clone https://github.com/brahamirabah94/teo-project-rabah.git
-
-        sleep 90
+        sleep 90 
         
         kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-check.xml
 
-        # git add .
 
-        # git commit -m 'add checkov scan file'
-
-        # git push origin main
-
-- task: CmdLine@2
+- task: PublishPipelineArtifact@1
   inputs:
-    script: 'ls $(System.DefaultWorkingDirectory)/tests'
+    targetPath: '$(System.DefaultWorkingDirectory)/tests/Test-check.xml'
+    artifact: 'test-checkov'
+    publishLocation: 'pipeline'
 
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
