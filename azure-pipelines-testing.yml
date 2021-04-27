@@ -24,16 +24,17 @@ steps:
         az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
         kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
 
-        sleep 90 
+        wait 60
         
-        kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-check.xml
+        kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
 
 
-- task: PublishPipelineArtifact@1
+- task: PublishTestResults@2
   inputs:
-    targetPath: '$(System.DefaultWorkingDirectory)/tests/Test-check.xml'
-    artifact: 'test-checkov'
-    publishLocation: 'pipeline'
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/tests'
+    testRunTitle: 'test-checkov'
 
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
