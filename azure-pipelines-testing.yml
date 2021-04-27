@@ -14,9 +14,6 @@ strategy:
       python.version: '3.7'
 
 steps:
-- task: AzureCLI@2
-  displayName: checkov scan
-  inputs:
 - task: CmdLine@2
   inputs:
     script: |
