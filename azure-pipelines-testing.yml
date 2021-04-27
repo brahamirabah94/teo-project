@@ -47,8 +47,12 @@ steps:
 
 - script: |
     pip install pytest pytest-azurepipelines
-    pytest  $(System.DefaultWorkingDirectory)/rng -rA --junitxml="Test-report-u.xml"
-  displayName: 'pytest'
+    pytest  $(System.DefaultWorkingDirectory)/rng -rA --junitxml="Test-Unit-rng.xml"
+  displayName: 'Unit-test-rng'
   condition: succeededOrFailed()
 
+- script: |
+    pytest  $(System.DefaultWorkingDirectory)/tests -rA --junitxml="Test-selinium-rng.xml"
+  displayName: 'pytest'
+  condition: succeededOrFailed()
 
