@@ -29,6 +29,7 @@ steps:
         kubectl logs job/checkov -n checkov > $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
 
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
+        vi $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
         
 - task: PublishTestResults@2
