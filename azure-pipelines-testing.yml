@@ -26,7 +26,7 @@ steps:
 
         wait 60
         
-        kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
+        kubectl logs job/checkov -n checkov > $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
 
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
@@ -37,6 +37,7 @@ steps:
     testResultsFiles: 'Test-*.xml'
     searchFolder:  '$(System.DefaultWorkingDirectory)/tests'
     testRunTitle: 'test-checkov'
+    publishRunAttachments: true
 
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
