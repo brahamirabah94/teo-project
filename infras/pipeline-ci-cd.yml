@@ -37,6 +37,32 @@ stages:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
+        commandOptions: '-out tfplan'
+    
+    - script: |
+          cd $(System.DefaultWorkingDirectory)/terraform
+          terraform show -json tfplan >> tfplan.json
+          # Format tfplan.json file
+          terraform show -json tfplan | jq '.' > tfplan.json
+          checkov -f tfplan.json -o junitxml > Test-checkov.xml
+      displayName: generate Test-checkov.xml
+    - task: PublishBuildArtifacts@1
+      displayName: Upload tfplan
+      inputs:
+        PathtoPublish: '$(System.DefaultWorkingDirectory)/01_ResourceGroup/'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+  
+  - job: waitForValidation
+    displayName: Wait for external validation 
+    dependsOn: terraform_init_plan
+    pool: server    
+    timeoutInMinutes: 120 # job times out in 2h
+    steps:   
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: 'rabah.brahami@teolia.fr'
+        instructions: 'you should validate the checkov scan file'
 
     - task: TerraformTaskV1@0
       displayName: terraform apply
@@ -83,21 +109,27 @@ stages:
             --set git.branch=main \
             --set git.pollInterval=30s \
             --namespace flux
+
           echo "installing flux. installing the helm operator"
           helm upgrade -i helm-operator fluxcd/helm-operator \
             --set git.ssh.secretName=flux-git-deploy \
             --namespace flux \
             --set helm.versions=v3
+
           sleep 5
+
           echo "ensuring monitoring namespace exists"
           kubectl create namespace monitoring
           echo "adding prometheus & grafana helm repo"
           helm repo add stable https://charts.helm.sh/stable
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
           echo "installing prometheus charts"
           helm install stable prometheus-community/kube-prometheus-stack --namespace monitoring
+
           sleep 5
           helm install elasticsearch stable/elasticsearch
+
           kubectl apply -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/fluentd-daemonset-elasticsearch.yaml
           
           helm install kibana stable/kibana -f https://raw.githubusercontent.com/brahamirabah94/teo-project/main/infras/kibana-values.yaml
