@@ -29,17 +29,9 @@ steps:
         kubectl logs job/checkov -n checkov > $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
 
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
-        vi $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
+
         sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
         
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: 'Test-*.xml'
-    searchFolder:  '$(System.DefaultWorkingDirectory)/tests'
-    testRunTitle: 'test-checkov'
-    publishRunAttachments: true
-
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
   inputs:
@@ -58,4 +50,12 @@ steps:
     pytest  $(System.DefaultWorkingDirectory)/rng -rA --junitxml="Test-report-u.xml"
   displayName: 'pytest'
   condition: succeededOrFailed()
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'Test-*.xml'
+    searchFolder:  '$(System.DefaultWorkingDirectory)/tests'
+    testRunTitle: 'test-checkov'
+    publishRunAttachments: true
 
