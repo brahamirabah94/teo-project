@@ -25,9 +25,21 @@ steps:
 
         kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
 
+        git clone https://github.com/brahamirabah94/teo-project-rabah.git
+
         sleep 90
         
         kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-check.xml
+
+        # git add .
+
+        # git commit -m 'add checkov scan file'
+
+        # git push origin main
+
+- task: CmdLine@2
+  inputs:
+    script: 'ls $(System.DefaultWorkingDirectory)/tests'
 
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
