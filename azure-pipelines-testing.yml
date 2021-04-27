@@ -17,21 +17,18 @@ steps:
 - task: AzureCLI@2
   displayName: checkov scan
   inputs:
-    azureSubscription: 'MyConnectionAzure'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-        az aks get-credentials -n teoSch-aks-cluster -g rg-teoschool-rabah-001 --admin
-        kubectl apply -f https://raw.githubusercontent.com/bridgecrewio/checkov/master/kubernetes/checkov-job.yaml
+- task: CmdLine@2
+  inputs:
+    script: |
+      'docker run --tty --volume $(System.DefaultWorkingDirectory)/terraform:/tf bridgecrew/checkov --directory /tf --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-tf-Report.xml'
+      'docker run --tty --volume $(System.DefaultWorkingDirectory)/k8s-conf-spec:/k8s bridgecrew/checkov --directory /k8s --output junitxml > $(System.DefaultWorkingDirectory)/tests/Checkov-k8s-Report.xml'
 
-        wait 60
-        
-        kubectl logs job/checkov -n checkov > $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'Checkov-*.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/tests'
 
-        sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
-
-        sed -i '$d' $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
-        
 - task: UsePythonVersion@0
   condition: succeededOrFailed()
   inputs:
@@ -51,11 +48,4 @@ steps:
   displayName: 'pytest'
   condition: succeededOrFailed()
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: 'Test-*.xml'
-    searchFolder:  '$(System.DefaultWorkingDirectory)/tests'
-    testRunTitle: 'test-checkov'
-    publishRunAttachments: true
 
