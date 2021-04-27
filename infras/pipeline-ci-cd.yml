@@ -37,13 +37,12 @@ stages:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
-
     - task: TerraformTaskV1@0
       displayName: terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
 
 
