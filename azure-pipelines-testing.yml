@@ -29,10 +29,13 @@ steps:
         kubectl logs job/checkov -n checkov >> Test-checkov-k8s.xml
 
 
+- task: CmdLine@2
+  inputs:
+    script: 'ls'
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/Test-*.xml'
+    testResultsFiles: 'Test-*.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)/tests'
     testRunTitle: 'test-checkov'
 
