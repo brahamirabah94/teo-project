@@ -26,16 +26,17 @@ steps:
 
         wait 60
         
-        kubectl logs job/checkov -n checkov >> Test-checkov-k8s.xml
+        kubectl logs job/checkov -n checkov >> $(System.DefaultWorkingDirectory)/tests/Test-checkov-k8s.xml
 
 
 - task: CmdLine@2
   inputs:
-    script: 'ls'
+    script: 'ls  $(System.DefaultWorkingDirectory)/tests'
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'Test-*.xml'
+    searchFolder:  '$(System.DefaultWorkingDirectory)/tests'
     testRunTitle: 'test-checkov'
 
 - task: UsePythonVersion@0
