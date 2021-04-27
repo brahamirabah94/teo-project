@@ -46,20 +46,15 @@ stages:
           terraform show -json tfplan | jq '.' > tfplan.json
           checkov -f tfplan.json -o junitxml > Test-checkov.xml
       displayName: generate Test-checkov.xml
-    - task: PublishBuildArtifacts@1
-      displayName: Upload tfplan
+    - task: PublishPipelineArtifact@1
       inputs:
-        PathtoPublish: '$(System.DefaultWorkingDirectory)/terraform/'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        targetPath: '$(System.DefaultWorkingDirectory)/terraform/Test-checkov.xml'
+        artifact: 'Test-checkov'
+        publishLocation: 'pipeline'
   
-  - job: waitForValidation
-    displayName: Wait for external validation 
-    dependsOn: terraform_init_plan
-    pool: server    
-    timeoutInMinutes: 120 # job times out in 2h
-    steps:   
     - task: ManualValidation@0
+      displayName: Wait for validation 
+      timeoutInMinutes: 120
       inputs:
         notifyUsers: 'rabah.brahami@teolia.fr'
         instructions: 'you should validate the checkov scan file'
@@ -71,6 +66,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
         environmentServiceNameAzureRM: 'MyConnectionAzure'
+
 
 - stage: configure_cluster_AKS
 
