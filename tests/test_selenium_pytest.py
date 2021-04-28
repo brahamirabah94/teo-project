@@ -14,7 +14,7 @@ def test_setup():
     driver.quit()
     print("fin des tests")
 
-class TestSample(test_setup):
+class TestSample(self, test_setup):
 
     def test_home_page_title(self):
         x = self.driver.title
