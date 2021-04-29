@@ -43,6 +43,7 @@ stages:
           fi
 
       - task: PublishTestResults@2
+        condition: succeededOrFailed()
         inputs:
           testResultsFormat: 'JUnit'
           testResultsFiles: 'kics-results.json'
