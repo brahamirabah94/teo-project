@@ -40,5 +40,5 @@ stages:
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: 'JUnit'
-          testResultsFiles: 'kics-results.xml'
+          testResultsFiles: 'kics-results.html'
           searchFolder: /home/vsts/work/1/s
