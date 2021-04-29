@@ -29,16 +29,20 @@ stages:
           wget -q -c https://github.com/Checkmarx/kics/releases/download/${LATEST_TAG}/${PACKAGE_NAME} -O - | tar -xz -C ${TARGET_DIR}
 
           echo '--- START SCANNING ---'
-          ${TARGET_DIR}/kics --no-progress -q ${TARGET_DIR}/assets/queries -p ${PWD} -o ${PWD}/kics-results.html
+          ${TARGET_DIR}/kics --no-progress -q ${TARGET_DIR}/assets/queries -p ${PWD} -o ${PWD}/kics-results.json
 
-          echo ${PWD}
+          TOTAL_SEVERITY_COUNTER=`grep '"total_counter"':' ' kics-results.json | awk {'print $2'}`
+          export SEVERITY_COUNTER_HIGH=`grep '"HIGH"':' ' kics-results.json | awk {'print $2'} | sed 's/.$//'`
+          SEVERITY_COUNTER_MEDIUM=`grep '"INFO"':' ' kics-results.json | awk {'print $2'} | sed 's/.$//'`
+          SEVERITY_COUNTER_LOW=`grep '"LOW"':' ' kics-results.json | awk {'print $2'} | sed 's/.$//'`
+          SEVERITY_COUNTER_INFO=`grep '"MEDIUM"':' ' kics-results.json | awk {'print $2'} | sed 's/.$//'`
+          echo "TOTAL SEVERITY COUNTER $TOTAL_SEVERITY_COUNTER"
 
-          cat ${PWD}/kics-results.json
-
-
-      - task: PublishTestResults@2
-        condition: succeededOrFailed()
+          if [ "$SEVERITY_COUNTER_HIGH" -ge "1" ]; then
+            echo "Please fix all $SEVERITY_COUNTER_HIGH HIGH SEVERITY COUNTERS" && exit 1;
+          fi
+      - task: PublishPipelineArtifact@1
         inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: 'kics-results.html'
-          searchFolder: /home/vsts/work/1/s
+          targetPath: '/home/vsts/work/1/s/kics-results.json'
+          artifact: 'check-artifactory'
+          publishLocation: 'pipeline'
