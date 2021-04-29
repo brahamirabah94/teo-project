@@ -49,4 +49,4 @@ stages:
         inputs:
           testResultsFormat: 'JUnit'
           testResultsFiles: 'kics-results.json'
-          searchFolder: '${PWD}'
+          searchFolder: /home/vsts/work/1/s
